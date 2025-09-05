@@ -1,0 +1,37 @@
+{
+  "name": "bridge-project",
+  "version": "1.0.0",
+  "description": "Bridge Project - 前后端分离的票务预订系统",
+  "main": "deploy.js",
+  "scripts": {
+    "deploy": "node deploy.js",
+    "setup": "node deploy.js",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend/bridge && npm run dev",
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend/bridge && npm run build",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend/bridge && npm install",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "vercel:deploy": "vercel --prod",
+    "vercel:login": "vercel login"
+  },
+  "keywords": [
+    "vue",
+    "express",
+    "mongodb",
+    "ticket-booking",
+    "fullstack"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
