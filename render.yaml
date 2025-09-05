@@ -1,0 +1,55 @@
+# Render 部署配置文件
+# 这个文件定义了如何在 Render 平台上部署整个项目
+
+services:
+  # 后端服务
+  - type: web
+    name: bridge-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: MONGODB_URI
+        sync: false  # 需要在 Render 控制台手动设置
+      - key: JWT_SECRET
+        sync: false  # 需要在 Render 控制台手动设置
+      - key: CORS_ORIGIN
+        sync: false  # 需要在 Render 控制台手动设置
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # 前端服务
+  - type: web
+    name: bridge-frontend
+    env: static
+    plan: free
+    buildCommand: cd frontend/bridge && npm install && npm run build
+    staticPublishPath: frontend/bridge/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false  # 需要在 Render 控制台手动设置
+      - key: VITE_APP_NAME
+        value: Bridge Project
+      - key: VITE_APP_VERSION
+        value: 1.0.0
+    autoDeploy: true
+
+  # 数据库服务 (可选，建议使用 MongoDB Atlas)
+  - type: pserv
+    name: bridge-database
+    env: docker
+    plan: free
+    dockerfilePath: ./database/Dockerfile
+    envVars:
+      - key: MONGO_INITDB_ROOT_USERNAME
+        value: admin
+      - key: MONGO_INITDB_ROOT_PASSWORD
+        sync: false  # 需要在 Render 控制台手动设置
+      - key: MONGO_INITDB_DATABASE
+        value: ticket_booking
+    autoDeploy: true
